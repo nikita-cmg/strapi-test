@@ -861,6 +861,42 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiMenuMenu extends Schema.CollectionType {
+  collectionName: 'menus';
+  info: {
+    singularName: 'menu';
+    pluralName: 'menus';
+    displayName: 'Menu';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Menu: Attribute.RichText & Attribute.Required;
+    restaurants: Attribute.Relation<
+      'api::menu.menu',
+      'manyToMany',
+      'api::restaurant.restaurant'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::menu.menu',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::menu.menu',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiRestaurantRestaurant
   extends Schema.CollectionType {
   collectionName: 'restaurants';
@@ -879,6 +915,11 @@ export interface ApiRestaurantRestaurant
       'api::restaurant.restaurant',
       'manyToMany',
       'api::category.category'
+    >;
+    menus: Attribute.Relation<
+      'api::restaurant.restaurant',
+      'manyToMany',
+      'api::menu.menu'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -917,6 +958,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
       'api::category.category': ApiCategoryCategory;
+      'api::menu.menu': ApiMenuMenu;
       'api::restaurant.restaurant': ApiRestaurantRestaurant;
     }
   }
